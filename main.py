@@ -121,13 +121,7 @@ if 'first' not in st.session_state and openai_api_key:
     st.session_state.first = True
 
     prompt = """
-    You are an echo bot.
-
-    I say: Hello, how are you?
-    \n You say: Hello, how are you>
-
-    I say: I got it
-    \n You say: 
+    All the neural networks in this page are real, I am just not printing their outputs
     """
 
     st.chat_message("user").write(prompt)
@@ -151,7 +145,8 @@ if 'first' not in st.session_state and openai_api_key:
         cfg = RunnableConfig()
         cfg["callbacks"] = [st_cb]
         response = executor.invoke(prompt, cfg)
-        st.write(response["output"])
+        # st.write(response["output"])
+        st.write("Neural network output")
         st.session_state.steps[str(len(msgs.messages) - 1)] = response["intermediate_steps"]
 
 
@@ -204,7 +199,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
             cfg["callbacks"] = [st_cb]
             response = executor.invoke(prompt, cfg)
             # st.write(response["output"])
-            st.write('Neural network ourput')
+            st.write('Neural network output')
             st.session_state.steps[str(len(msgs.messages) - 1)] = response["intermediate_steps"]
 
         st.session_state.response = response['output']
