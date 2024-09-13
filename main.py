@@ -96,7 +96,13 @@ if 'first' not in st.session_state and openai_api_key:
     st.session_state.first = True
 
     prompt = """
-    You should just repeat what I say to you
+    You are an echo bot.
+
+    I say: Hello, how are you?
+    \n You say: Hello, how are you>
+
+    I say: I got it
+    \n You say: 
     """
 
     st.chat_message("user").write(prompt)
