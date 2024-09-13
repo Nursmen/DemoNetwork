@@ -7,9 +7,17 @@ from streamlit_javascript import st_javascript
 
 DATE = datetime.today().strftime("%Y-%m-%d")
 TIMEZONE = st_javascript("""await (async () => {
-            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            console.log(userTimezone)
-            return userTimezone
+    const now = new Date();
+
+    const timezoneOffsetInMinutes = now.getTimezoneOffset();
+    const offsetHours = Math.floor(Math.abs(timezoneOffsetInMinutes) / 60);
+    const offsetMinutes = Math.abs(timezoneOffsetInMinutes) % 60;
+
+    const sign = timezoneOffsetInMinutes > 0 ? "-" : "+";
+
+    const formattedOffset = `UTC${sign}${String(offsetHours).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`;
+
+    return formattedOffset;
 })().then(returnValue => returnValue)""")
 
 
