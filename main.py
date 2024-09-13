@@ -243,6 +243,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
                 # if check_integration(app) == False: 
 
                 apps.append(app)
+                print(add_integration(app))
                 links.append(add_integration(app))
 
             if len(apps) == 0:
