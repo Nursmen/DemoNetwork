@@ -34,10 +34,10 @@ st.title("Nurses demo")
 
 import os 
 
-if os.getenv("OPENAI_API_KEY") is not None:
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-else:
-    openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
+# if os.getenv("OPENAI_API_KEY") is not None:
+#     openai_api_key = os.getenv("OPENAI_API_KEY")
+# else:
+openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
 os.environ["OPENAI_API_KEY"] = openai_api_key
 
@@ -92,7 +92,7 @@ for idx, msg in enumerate(msgs.messages):
 
 # Here is first run of the bot to give it some context
 
-if 'first' not in st.session_state:
+if 'first' not in st.session_state and openai_api_key:
     st.session_state.first = True
 
     prompt = """
@@ -175,7 +175,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
         st.session_state.response = response['output']
 
         tools_needed = response['output'].split('\n')
-        tools_needed = [tool_searcher.invoke(tool, openai_api_key) for tool in tools_needed]
+        tools_needed = [tool_searcher.invoke(tool) for tool in tools_needed]
 
         st.session_state.tools_needed = tools_needed
         st.session_state.prompt = prompt
@@ -230,7 +230,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
                     stream_handler = StreamHandler(st.empty())
                     response = run(todo=prompt, tools = tools, openai_api_key=openai_api_key, composio_toolset=composio_toolset)
                     
-                    if code == 200:
+                    if response == 200:
                         st.write("Success! Now you can do something else!")
 
                     else:

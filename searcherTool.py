@@ -24,11 +24,13 @@ APIKEY = 'UqAdx7BDphab5z4o1fh9OqeIpVsSunqtxUSX'
 COHERE_API_KEY = '5EpCLYfOleHpMpjOuHjlQtylxlUstRWJnE2o8AJH'
 
 @tool
-def tool_searcher(query: str, OPENAI_API_KEY: str):
+def tool_searcher(query: str):
     """
     Scan a predefined tools database and retrieve the most appropriate tool required for a given task. When a command is provided, the searcher automatically looks up the tools available in the connected apps to ensure the necessary tool exists.
     """
 
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    
     client = weaviate.Client(
         url=URL,
         auth_client_secret=weaviate.AuthApiKey(api_key=APIKEY),
