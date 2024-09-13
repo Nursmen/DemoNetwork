@@ -163,6 +163,9 @@ if 'first' not in st.session_state and openai_api_key:
 if 'check' not in st.session_state:
     st.session_state.check = False
 
+if 'ready' not in st.session_state:
+    st.session_state.ready = False
+
 tools_needed = []
 
 
@@ -240,11 +243,12 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
                 print(app)
                 print(check_integration(app))
 
-                # if check_integration(app) == False: 
+                if st.session_state.ready == False: 
 
-                apps.append(app)
-                print(add_integration(app))
-                links.append(add_integration(app))
+                    apps.append(app)
+                    links.append(add_integration(app))
+
+                    st.session_state.ready = True
 
             if len(apps) == 0:
                 tools = composio_toolset.get_tools(actions=[getattr(Action, tool) for tool in st.session_state.tools_needed])
