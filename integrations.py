@@ -207,7 +207,7 @@ def _handle_basic_auth(
 def check_integration(name:str) -> bool:
     context = get_context()
 
-    for app in context.client.connected_accounts.get(active=True):
+    for app in context.client.connected_accounts.get(active=False):
         if app.appUniqueId == name:
             return True
     return False
