@@ -3,8 +3,15 @@ from datetime import datetime
 from composio_openai import ComposioToolSet
 from openai import OpenAI
 
+from streamlit_javascript import st_javascript
+
 DATE = datetime.today().strftime("%Y-%m-%d")
-TIMEZONE = datetime.now().astimezone().tzinfo
+TIMEZONE = st_javascript("""await (async () => {
+            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            console.log(userTimezone)
+            return userTimezone
+})().then(returnValue => returnValue)""")
+
 
 
 def run(todo:str, tools:list, openai_api_key:str, composio_toolset:ComposioToolSet) -> str:
@@ -19,6 +26,7 @@ def run(todo:str, tools:list, openai_api_key:str, composio_toolset:ComposioToolS
             {"role": "user", "content": todo},
         ],
     )
+
 
     try:
         result = composio_toolset.handle_tool_calls(response)

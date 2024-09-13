@@ -43,6 +43,24 @@ os.environ["OPENAI_API_KEY"] = openai_api_key
 
 
 
+# here we show date and timezone
+
+from streamlit_javascript import st_javascript
+from datetime import datetime
+
+DATE = datetime.today().strftime("%Y-%m-%d")
+TIMEZONE = st_javascript("""await (async () => {
+            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            console.log(userTimezone)
+            return userTimezone
+})().then(returnValue => returnValue)""")
+
+st.write(f"Date: {DATE} and timezone: {TIMEZONE}")
+
+
+
+
+
 # Here is composio login
 
 logout()
