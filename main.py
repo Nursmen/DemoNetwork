@@ -44,15 +44,22 @@ os.environ["OPENAI_API_KEY"] = openai_api_key
 
 
 # here we show date and timezone
-
 from streamlit_javascript import st_javascript
 from datetime import datetime
 
 DATE = datetime.today().strftime("%Y-%m-%d")
 TIMEZONE = st_javascript("""await (async () => {
-            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            console.log(userTimezone)
-            return userTimezone
+    const now = new Date();
+
+    const timezoneOffsetInMinutes = now.getTimezoneOffset();
+    const offsetHours = Math.floor(Math.abs(timezoneOffsetInMinutes) / 60);
+    const offsetMinutes = Math.abs(timezoneOffsetInMinutes) % 60;
+
+    const sign = timezoneOffsetInMinutes > 0 ? "-" : "+";
+
+    const formattedOffset = `UTC${sign}${String(offsetHours).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`;
+
+    return formattedOffset;
 })().then(returnValue => returnValue)""")
 
 st.write(f"Date: {DATE} and timezone: {TIMEZONE}")
@@ -198,7 +205,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
 
         st.session_state.response = response['output']
 
-        tools_needed = response['output'].split('\n')
+        tools_needed = prompt.split('\n')
         tools_needed = [tool_searcher.invoke(tool) for tool in tools_needed]
 
         st.session_state.tools_needed = tools_needed
