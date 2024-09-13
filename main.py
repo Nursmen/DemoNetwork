@@ -269,6 +269,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
                         st.write("Something went wrong. Please try again.")    
 
                 st.session_state.check = False
+                st.session_state.ready = False
 
             else:
                 st.write("Please go to the following links:")
