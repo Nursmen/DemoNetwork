@@ -240,10 +240,10 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
                 print(app)
                 print(check_integration(app))
 
-                if check_integration(app) == False: 
+                # if check_integration(app) == False: 
 
-                    apps.append(app)
-                    links.append(add_integration(app))
+                apps.append(app)
+                links.append(add_integration(app))
 
             if len(apps) == 0:
                 tools = composio_toolset.get_tools(actions=[getattr(Action, tool) for tool in st.session_state.tools_needed])
