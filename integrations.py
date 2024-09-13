@@ -33,7 +33,7 @@ def add_integration(
     no_browser: bool = False,
     auth_mode: t.Optional[str] = None,
     scopes: t.Optional[t.Tuple[str, ...]] = None,
-    force: bool = False,
+    force: bool = True,
 ) -> None:
     
     entity = context.client.get_entity(id=entity_id)
