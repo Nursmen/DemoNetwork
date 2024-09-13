@@ -9,16 +9,19 @@ from langchain_community.retrievers import (
 import cohere
 
 import os
-import dotenv
+# import dotenv
 
 import re
 
-dotenv.load_dotenv()
+# dotenv.load_dotenv()
 
-URL = os.getenv('WEAVIATE_URL')
-APIKEY = os.getenv('WEAVIATE_API_KEY')
+# URL = os.getenv('WEAVIATE_URL')
+URL = 'https://xq2djbbhscm62fg72eqsg.c0.us-east1.gcp.weaviate.cloud'
+# APIKEY = os.getenv('WEAVIATE_API_KEY')
+APIKEY = 'UqAdx7BDphab5z4o1fh9OqeIpVsSunqtxUSX'
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-COHERE_API_KEY = os.getenv('COHERE_API_KEY')
+# COHERE_API_KEY = os.getenv('COHERE_API_KEY')
+COHERE_API_KEY = '5EpCLYfOleHpMpjOuHjlQtylxlUstRWJnE2o8AJH'
 
 client = weaviate.Client(
     url=URL,

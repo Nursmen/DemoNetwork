@@ -6,9 +6,9 @@ from langchain_community.retrievers import (
     WeaviateHybridSearchRetriever,
 )
 import os
-import dotenv
+# import dotenv
 
-dotenv.load_dotenv()
+# dotenv.load_dotenv()
 
 all_tools = pd.read_csv('./tools/tools.csv')['tool'].to_numpy()
 all_tools = [Document(page_content=tool) for tool in all_tools]

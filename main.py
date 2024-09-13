@@ -33,15 +33,13 @@ st.set_page_config(page_title="Nurses demo", page_icon="👍")
 st.title("Nurses demo")
 
 import os 
-import dotenv
 
-dotenv.load_dotenv()
 if os.getenv("OPENAI_API_KEY") is not None:
     openai_api_key = os.getenv("OPENAI_API_KEY")
 else:
     openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
-
+os.environ["OPENAI_API_KEY"] = openai_api_key
 
 
 

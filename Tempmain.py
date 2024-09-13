@@ -9,7 +9,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.runnables import RunnableConfig
 from langchain_openai import ChatOpenAI
 
-import dotenv
+# import dotenv
 
 import os
 import streamlit as st
@@ -17,7 +17,7 @@ import re
 
 from searcherTool import tool_searcher
 
-dotenv.load_dotenv()
+# dotenv.load_dotenv()
 
 llm = ChatOpenAI(model_name="gpt-3.5-turbo")
 
