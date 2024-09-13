@@ -30,7 +30,7 @@ def tool_searcher(query: str):
     """
 
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-    
+
     client = weaviate.Client(
         url=URL,
         auth_client_secret=weaviate.AuthApiKey(api_key=APIKEY),
@@ -62,8 +62,12 @@ def tool_searcher(query: str):
 
     results = model.invoke(prompt + s + "\n\n" + query)
 
-    tools_needed = re.findall(r'\b[A-Z_]+\b', results.content)[-1]
+    try:
 
+        tools_needed = re.findall(r'\b[A-Z_]+\b', results.content)[-1]
+    except:
+        return None
+    
     results = [ff.page_content for ff in retriever.invoke(tools_needed)]
 
     return results[0]
