@@ -203,7 +203,8 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
             cfg = RunnableConfig()
             cfg["callbacks"] = [st_cb]
             response = executor.invoke(prompt, cfg)
-            st.write(response["output"])
+            # st.write(response["output"])
+            st.write('Neural network ourput')
             st.session_state.steps[str(len(msgs.messages) - 1)] = response["intermediate_steps"]
 
         st.session_state.response = response['output']
