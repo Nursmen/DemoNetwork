@@ -175,7 +175,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
         st.session_state.response = response['output']
 
         tools_needed = response['output'].split('\n')
-        tools_needed = [tool_searcher.invoke(tool) for tool in tools_needed]
+        tools_needed = [tool_searcher.invoke(tool, openai_api_key) for tool in tools_needed]
 
         st.session_state.tools_needed = tools_needed
         st.session_state.prompt = prompt

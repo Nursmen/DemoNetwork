@@ -19,38 +19,39 @@ import re
 URL = 'https://xq2djbbhscm62fg72eqsg.c0.us-east1.gcp.weaviate.cloud'
 # APIKEY = os.getenv('WEAVIATE_API_KEY')
 APIKEY = 'UqAdx7BDphab5z4o1fh9OqeIpVsSunqtxUSX'
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+# OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 # COHERE_API_KEY = os.getenv('COHERE_API_KEY')
 COHERE_API_KEY = '5EpCLYfOleHpMpjOuHjlQtylxlUstRWJnE2o8AJH'
 
-client = weaviate.Client(
-    url=URL,
-    auth_client_secret=weaviate.AuthApiKey(api_key=APIKEY),
-    additional_headers={
-        "X-Openai-Api-Key": OPENAI_API_KEY,
-    },
-)
-
-retriever = WeaviateHybridSearchRetriever(
-    client=client,
-    index_name="TOOLSET_TEST",
-    text_key="text",
-    attributes=[],
-    create_schema_if_missing=True,
-    k=25,
-)
-
-co = cohere.Client(api_key=COHERE_API_KEY)
-
-model = ChatOpenAI(model="gpt-4o", openai_api_key=OPENAI_API_KEY)
-
-prompt = """Which one of the following tools is more likly to be used for a given task? Return it in the same format as the tool-set\n\n"""
-
 @tool
-def tool_searcher(query: str):
+def tool_searcher(query: str, OPENAI_API_KEY: str):
     """
     Scan a predefined tools database and retrieve the most appropriate tool required for a given task. When a command is provided, the searcher automatically looks up the tools available in the connected apps to ensure the necessary tool exists.
     """
+
+    client = weaviate.Client(
+        url=URL,
+        auth_client_secret=weaviate.AuthApiKey(api_key=APIKEY),
+        additional_headers={
+            "X-Openai-Api-Key": OPENAI_API_KEY,
+        },
+    )
+
+    retriever = WeaviateHybridSearchRetriever(
+        client=client,
+        index_name="TOOLSET_TEST",
+        text_key="text",
+        attributes=[],
+        create_schema_if_missing=True,
+        k=25,
+    )
+
+    co = cohere.Client(api_key=COHERE_API_KEY)
+
+    model = ChatOpenAI(model="gpt-4o", openai_api_key=OPENAI_API_KEY)
+
+    prompt = """Which one of the following tools is more likly to be used for a given task? Return it in the same format as the tool-set\n\n"""
+    
     firstFilter = [ff.page_content for ff in retriever.invoke(query)]
 
     results = co.rerank(model="rerank-english-v3.0", query=query, documents=firstFilter, top_n=20, return_documents=True)
