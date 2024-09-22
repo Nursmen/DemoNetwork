@@ -10,6 +10,7 @@ from composio.client.collections import (
 from composio.client.exceptions import ComposioClientError
 from composio.utils.url import get_web_url
 from composio.cli.context import get_context
+from composio.cli.connections import _connections
 
 def _load_integration(
     context: Context,
@@ -207,12 +208,11 @@ def _handle_basic_auth(
 def check_integration(name:str) -> bool:
     context = get_context()
 
-    for app in context.client.connected_accounts.get(active=False):
-        if app.appUniqueId == name:
-            return True
-    return False
+    integrations = context.client.integrations.get()
+
+    return any(integration.appName == name for integration in integrations)
 
 if __name__ == "__main__":
-    print(check_integration('notion'))
+    print(check_integration('weathermap'))
 
-    print(add_integration('discord'))
+    print(add_integration('weathermap'))

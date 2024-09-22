@@ -21,8 +21,7 @@ TIMEZONE = st_javascript("""await (async () => {
 })().then(returnValue => returnValue)""")
 
 
-
-def run(todo:str, tools:list, openai_api_key:str, composio_toolset:ComposioToolSet) -> str:
+def run(todo: str, tools: list, openai_api_key: str, composio_toolset: ComposioToolSet) -> tuple[int, str]:
     
     openai_client = OpenAI(api_key=openai_api_key)
 
@@ -37,21 +36,49 @@ def run(todo:str, tools:list, openai_api_key:str, composio_toolset:ComposioToolS
 
 
     try:
-        result = composio_toolset.handle_tool_calls(response)
-    except Exception as e:
-        return 400
+        tool_result = composio_toolset.handle_tool_calls(response)
+        
+        for tool in tool_result:
+            if tool['file'] is not None:
+                with open(tool['file'], 'rb') as file:
+                    file_content = file.read()
+                    if isinstance(file_content, bytes):
+                        file_content = file_content.decode('utf-8')
+                    tool['result'] = file_content
+                    tool['file'] = None
 
-    return 200
-    
+        print(tool_result)
+
+        response = openai_client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": f"You are an AI assistant. Use the following tool result to answer the user's request. Today's date is {DATE} and the timezone is {TIMEZONE}."},
+                {"role": "user", "content": f"Tool result: {tool_result}\n\nUser request: {todo}"},
+            ],
+        )
+
+        # Extract the model's answer
+        answer = response.choices[0].message.content
+        print(answer)
+
+        # Return the answer
+        return 200, answer
+    except Exception as e:
+        return 400, f'error: {e}'
+
 
 if __name__ == "__main__":
     import os
     import dotenv
+    from composio_openai import ComposioToolSet, Action
 
     dotenv.load_dotenv()
     open_ai_key = os.getenv("OPENAI_API_KEY")
 
-    print(run("what is the weather in sf", [], open_ai_key, ComposioToolSet()))
+    toolset = ComposioToolSet()
+    tools = toolset.get_tools(actions=[Action.WEATHERMAP_WEATHER])
+
+    print(run("what is the weather in sf", tools, open_ai_key, toolset))
 
 
 # Version of a program nobody needs for now

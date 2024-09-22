@@ -207,7 +207,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
         tools_needed = prompt.split('\n')
         tools_needed = [tool_searcher.invoke(tool) for tool in tools_needed]
 
-        st.session_state.tools_needed = tools_needed
+        st.session_state.tools_needed = list(set(tools_needed))
         st.session_state.prompt = prompt
     
         # if len(tools_needed) > 0:
@@ -239,12 +239,14 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
                 print(app)
                 print(check_integration(app))
 
-                if st.session_state.ready == False: 
+                if check_integration(app) == False: 
 
-                    apps.append(app)
-                    links.append(add_integration(app))
-
-                    st.session_state.ready = True
+                    try:
+                        links.append(add_integration(app))
+                        apps.append(app)
+                    except:
+                        print("does not require authentication")
+                        
 
             if len(apps) == 0:
                 tools = composio_toolset.get_tools(actions=[getattr(Action, tool) for tool in st.session_state.tools_needed])
@@ -260,17 +262,15 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
 
                 with st.chat_message("assistant"):
                     stream_handler = StreamHandler(st.empty())
-                    response = run(todo=prompt, tools = tools, openai_api_key=openai_api_key, composio_toolset=composio_toolset)
+                    response, answer = run(todo=prompt, tools = tools, openai_api_key=openai_api_key, composio_toolset=composio_toolset)
                     
                     if response == 200:
-                        st.write("Success! Now you can do something else!")
-
+                        st.write(answer)
                     else:
                         st.write("Something went wrong. Please try again.")    
 
                 st.session_state.check = False
-                st.session_state.ready = False
-
+ 
             else:
                 st.write("Please go to the following links:")
                 for app, link in zip(apps, links):
