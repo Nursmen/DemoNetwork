@@ -11,7 +11,7 @@ import os
 # dotenv.load_dotenv()
 
 composio_tools = pd.read_csv('../tools/tools.csv')['tool'].to_numpy()
-my_tools = pd.read_csv('./tools_mine.csv')['Name'].to_numpy()
+# my_tools = pd.read_csv('./tools_mine.csv')['Name'].to_numpy()
 
 all_tools = [Document(page_content=tool) for tool in composio_tools] + [Document(page_content=tool) for tool in my_tools]
 

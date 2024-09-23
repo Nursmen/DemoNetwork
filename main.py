@@ -226,7 +226,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
     #   Ask user if he is good with the tools
     #   And if he is we run those tools
 
-        if "yes" in prompt.lower() or any(char.isdigit() for char in prompt):
+        if "yes" in prompt.lower() or any(char.isdigit() for char in prompt) or 'ready' in prompt.lower():
 
             if 'yes' not in prompt.lower():
                 st.session_state.api_keys[st.session_state.current_tool] = prompt
@@ -265,7 +265,7 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
                         tools['mine'].append(tool)
                         the_tool = my_tools[my_tools['Name'] == tool]
                         if the_tool['Need API KEY'].values[0] != 'No' and tool not in st.session_state.api_keys.keys():
-                            st.write("Please provide API keys for the tool. Paste it and write 'ready'")
+                            st.write("Please provide API keys for the tool. Paste it here:")
                             st.write(the_tool['Name'].values[0])
                             st.write(the_tool['Get key'].values[0])
                             st.write(the_tool['Cost'].values[0])
