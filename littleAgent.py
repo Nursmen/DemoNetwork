@@ -3,6 +3,8 @@ from datetime import datetime
 from composio_openai import ComposioToolSet
 from openai import OpenAI
 
+from toolUsage import useTool
+
 from streamlit_javascript import st_javascript
 
 DATE = datetime.today().strftime("%Y-%m-%d")
@@ -21,23 +23,26 @@ TIMEZONE = st_javascript("""await (async () => {
 })().then(returnValue => returnValue)""")
 
 
-def run(todo: str, tools: list, openai_api_key: str, composio_toolset: ComposioToolSet) -> tuple[int, str]:
+def run(todo: str, tools: dict, openai_api_key: str, composio_toolset: ComposioToolSet, api_keys: dict) -> tuple[int, str]:
     
     openai_client = OpenAI(api_key=openai_api_key)
 
-    response = openai_client.chat.completions.create(
-        model="gpt-4o",
-        tools=tools,
-        messages=[
-            {"role": "system", "content": f"Excecute tools to do some work todays date is {DATE} and timezone {TIMEZONE}"},
-            {"role": "user", "content": todo},
-        ],
-    )
-
-
     try:
-        tool_result = composio_toolset.handle_tool_calls(response)
+        tool_result = []
         
+        if len(tools['composio']) > 0:
+            response = openai_client.chat.completions.create(
+                model="gpt-4o",
+                tools=tools['composio'],
+                messages=[
+                    {"role": "system", "content": f"Excecute tools to do some work todays date is {DATE} and timezone {TIMEZONE}"},
+                    {"role": "user", "content": todo},
+                ],
+            )
+
+            tool_result = composio_toolset.handle_tool_calls(response)
+
+
         for tool in tool_result:
             if tool['file'] is not None:
                 with open(tool['file'], 'rb') as file:
@@ -46,6 +51,9 @@ def run(todo: str, tools: list, openai_api_key: str, composio_toolset: ComposioT
                         file_content = file_content.decode('utf-8')
                     tool['result'] = file_content
                     tool['file'] = None
+
+        for tool in tools['mine']:
+            tool_result.append(useTool(tool, todo, openai_api_key, api_keys[tool]))
 
         print(tool_result)
 

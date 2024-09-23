@@ -10,8 +10,9 @@ import os
 
 # dotenv.load_dotenv()
 
-all_tools = pd.read_csv('./tools/tools.csv')['tool'].to_numpy()
-all_tools = [Document(page_content=tool) for tool in all_tools]
+composio_tools = pd.read_csv('../tools/tools.csv')['tool'].to_numpy()
+my_tools = pd.read_csv('./tools_mine.csv')['Name'].to_numpy()
+all_tools = [Document(page_content=tool) for tool in composio_tools] + [Document(page_content=tool) for tool in my_tools]
 
 URL = os.getenv('WEAVIATE_URL')
 APIKEY = os.getenv('WEAVIATE_API_KEY')
@@ -30,7 +31,7 @@ client = weaviate.Client(
 
 retriever = WeaviateHybridSearchRetriever(
     client=client,
-    index_name="TOOLSET_TEST",
+    index_name="TOOLSET2",
     text_key="text",
     attributes=[],
     create_schema_if_missing=True,

@@ -13,6 +13,7 @@ from searcherTool import tool_searcher
 from integrations import add_integration, check_integration
 from login import login, logout, authentificate
 from littleAgent import run
+import pandas as pd
 
 import streamlit as st
 
@@ -158,12 +159,13 @@ if 'first' not in st.session_state and openai_api_key:
 if 'check' not in st.session_state:
     st.session_state.check = False
 
-if 'ready' not in st.session_state:
-    st.session_state.ready = False
+if 'api_keys' not in st.session_state:
+    st.session_state.api_keys = {}
+
+if 'current_tool' not in st.session_state:
+    st.session_state.current_tool = None
 
 tools_needed = []
-
-
 
 # Handle input
 
@@ -205,9 +207,9 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
         st.session_state.response = response['output']
 
         tools_needed = prompt.split('\n')
-        tools_needed = [tool_searcher.invoke(tool) for tool in tools_needed]
+        tools_needed = set(tool_searcher.invoke(tool) for tool in tools_needed)
 
-        st.session_state.tools_needed = list(set(tools_needed))
+        st.session_state.tools_needed = tools_needed
         st.session_state.prompt = prompt
     
         # if len(tools_needed) > 0:
@@ -224,12 +226,13 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
     #   Ask user if he is good with the tools
     #   And if he is we run those tools
 
-        if "yes" in prompt.lower() or 'ready' in prompt.lower():
+        if "yes" in prompt.lower() or any(char.isdigit() for char in prompt):
+
+            if 'yes' not in prompt.lower():
+                st.session_state.api_keys[st.session_state.current_tool] = prompt
+                st.session_state.current_tool = None
 
             composio_toolset = ComposioToolSet(output_in_file=True)
-
- 
-
 
             links = []
             apps = []
@@ -239,37 +242,72 @@ if prompt := st.chat_input(placeholder="Ask bot to do something..."):
                 print(app)
                 print(check_integration(app))
 
-                if check_integration(app) == False: 
+                if check_integration(app) == False and tool[-1] != '_': 
 
                     try:
                         links.append(add_integration(app))
                         apps.append(app)
-                    except:
+                    except Exception as e:
                         print("does not require authentication")
-                        
+                        print(e)
 
             if len(apps) == 0:
-                tools = composio_toolset.get_tools(actions=[getattr(Action, tool) for tool in st.session_state.tools_needed])
+                go = True
+                tools = {
+                    'composio': [],
+                    'mine': []
+                }
 
+                my_tools = pd.read_csv('./tools_mine.csv')
+                for tool in st.session_state.tools_needed:
+                    if tool[-1] == '_':
 
-                prompt = """
-                You should use this tools:
-                """ + ", ".join(st.session_state.tools_needed) + " to " + st.session_state.prompt
+                        tools['mine'].append(tool)
+                        the_tool = my_tools[my_tools['Name'] == tool]
+                        if the_tool['Need API KEY'].values[0] != 'No' and tool not in st.session_state.api_keys.keys():
+                            st.write("Please provide API keys for the tool. Paste it and write 'ready'")
+                            st.write(the_tool['Name'].values[0])
+                            st.write(the_tool['Get key'].values[0])
+                            st.write(the_tool['Cost'].values[0])
 
-                st.chat_message("user").write(prompt)
-
-
-
-                with st.chat_message("assistant"):
-                    stream_handler = StreamHandler(st.empty())
-                    response, answer = run(todo=prompt, tools = tools, openai_api_key=openai_api_key, composio_toolset=composio_toolset)
-                    
-                    if response == 200:
-                        st.write(answer)
+                            st.session_state.current_tool = tool
                     else:
-                        st.write("Something went wrong. Please try again.")    
+                        action = getattr(Action, tool)
+                        tool_instance = composio_toolset.get_tools(actions=[action])
+                        tools['composio'].extend(tool_instance)
 
-                st.session_state.check = False
+                print(st.session_state.api_keys)
+
+                if st.session_state.current_tool is None:
+                    prompt = """
+                    You should use this tools:
+                    """ + ", ".join(st.session_state.tools_needed) + " to " + st.session_state.prompt
+
+                    st.chat_message("user").write(prompt)
+
+
+
+                    with st.chat_message("assistant"):
+                        stream_handler = StreamHandler(st.empty())
+                        response, answer = run(
+                                            todo=prompt, 
+                                            tools = tools, 
+                                            openai_api_key=openai_api_key, 
+                                            composio_toolset=composio_toolset,
+                                            api_keys=st.session_state.api_keys
+                                            )
+                        
+                        print(response)
+                        print(answer)
+                        if response == 200:
+                            st.write(answer)
+                        else:
+                            st.write("Something went wrong. Please try again.")    
+
+                    st.session_state.check = False
+
+                else:
+                    pass
  
             else:
                 st.write("Please go to the following links:")

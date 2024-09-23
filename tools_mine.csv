@@ -1,0 +1,393 @@
+Name,Description,API,Format Output,Cost,Get key,UI type,Response,Method,Need API KEY
+SCRAPE_URL_,Scraper automatically extracts data from websites.,https://api.firecrawl.dev/v1/scrape,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""url"": {
+            ""type"": ""string"",
+            ""description"": ""The URL to be used.""
+        }
+    },
+    ""required"": [""url""],
+    ""additionalProperties"": False
+}
+",$16,https://www.firecrawl.dev/app/api-keys,Text,,POST,Bearer
+IMAGE_TO_TEXT_,Image to text can analyze an image and generate a detailed textual description of its content.,https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""image"": {
+            ""type"": ""string"",
+            ""format"": ""binary"",
+            ""description"": ""Binary data representing the image.""
+        }
+    },
+    ""required"": [""image""],
+    ""additionalProperties"": False
+}
+",$0,https://huggingface.co/settings/tokens,Text,,POST,Bearer
+CURRACY_CONVERTER_,Curracy Converter allows you to convert one currency into another,https://api.apilayer.com/fixer/convert,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""to"": {
+            ""type"": ""string"",
+            ""description"": ""The recipient's identifier.""
+        },
+        ""from"": {
+            ""type"": ""string"",
+            ""description"": ""The sender's identifier.""
+        },
+        ""amount"": {
+            ""type"": ""number"",
+            ""description"": ""The amount to be transferred.""
+        }
+    },
+    ""required"": [""to"", ""from"", ""amount""],
+    ""additionalProperties"": False
+}
+",$0 until 100 than 15$,https://apilayer.com/marketplace/fixer-api#documentation-tab,Text,,GET,No
+WEATHER_,Weather lets you get whether in a specific area at a particular time ,http://api.weatherstack.com/current,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""query"": {
+            ""type"": ""string"",
+            ""description"": ""The search or query string.""
+        }
+    },
+    ""required"": [""query""],
+    ""additionalProperties"": False
+}
+",0 untill 250 than $10,https://weatherstack.com/dashboard,Weather,current -> temperature,GET,Search
+SCREENSHOT_,Takes screenshot of site you provide url of,http://api.screenshotlayer.com/api/capture,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""access_key"": {
+            ""type"": ""string"",
+            ""description"": ""The access key for authentication.""
+        },
+        ""url"": {
+            ""type"": ""string"",
+            ""description"": ""The URL to be accessed.""
+        }
+    },
+    ""required"": [""access_key"", ""url""],
+    ""additionalProperties"": False
+}
+",0 untill 100 than $20,https://screenshotlayer.com/dashboard,Image,,GET,Search
+SHORTEN_URL_,"Given a long URL, returns a short link",https://cleanuri.com/api/v1/shorten,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""url"": {
+            ""type"": ""string"",
+            ""description"": ""The URL to be used.""
+        }
+    },
+    ""required"": [""url""],
+    ""additionalProperties"": False
+}
+",$0,Don't require,Text,result_url,POST,No
+TRANSLATE_,Convert text from one language to another when you provide query and target,https://translation.googleapis.com/language/translate/v2,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""q"": {
+            ""type"": ""string"",
+            ""description"": ""The query string to search.""
+        },
+        ""target"": {
+            ""type"": ""string"",
+            ""description"": ""The target or destination for the query.""
+        },
+        ""key"": {
+            ""type"": ""string"",
+            ""description"": ""The API key for authentication.""
+        }
+    },
+    ""required"": [""q"", ""target"", ""key""],
+    ""additionalProperties"": False
+}
+",as you use,https://console.cloud.google.com/apis/credentials,Text,,POST,No
+BLAND_AI_BATCH_CALL_WITH_TASK_,Send large volumes of calls at once with follow-up sequences.,https://api.bland.ai/v2/batches,"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""phone_numbers"": {
+      ""type"": ""array"",
+      ""items"": {
+        ""type"": ""string""
+      },
+      ""description"": ""A list of phone numbers to contact.""
+    },
+    ""task"": {
+      ""type"": ""string"",
+      ""description"": ""The task to perform, such as distracting with a story.""
+    }
+  },
+  ""required"": [""phone_numbers"", ""task""],
+  ""additionalProperties"": False
+}
+","Bland costs $0.09/minute, only for connected calls, billed to the exact second. ",https://app.bland.ai/,Text,,POST,Header
+BLAND_AI_CALL_WITH_TASK_,Send an AI phone call with a custom objective and actions.,https://api.bland.ai/v1/calls,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""phone_number"": {
+            ""type"": ""string"",
+            ""description"": ""The phone number to contact.""
+        },
+        ""task"": {
+            ""type"": ""string"",
+            ""description"": ""The task to perform, such as distracting with a story.""
+        }
+    },
+    ""required"": [""phone_number"", ""task""],
+    ""additionalProperties"": False
+}
+","Bland costs $0.09/minute, only for connected calls, billed to the exact second. ",https://app.bland.ai/,Text,,POST,Header
+FLUX_TEXT_TO_IMAGE_,Flux text-to-image generation model designed to create high-quality images from textual descriptions, https://api.aimlapi.com/images/generations,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""prompt"": {
+            ""type"": ""string"",
+            ""description"": ""The description for the art generation prompt.""
+        },
+        ""model"": {
+            ""type"": ""string"",
+            ""description"": ""Just write in here 'flux/schnell' "",
+            ""default"": 7
+        }
+    },
+    ""required"": [""prompt"", ""model""],
+    ""additionalProperties"": False
+}",1k tokens for $0.0525,https://aimlapi.com/app/keys,Image,images -> url,POST,Bearer
+СRAWL_URL_,Crawls a website and returns the content of the page and the content of the pages linked on the page,https://self.com/tools/crawl,"{
+ ""type"": ""object"", 
+""properties"": 
+{ ""url"": 
+{ ""type"": ""string"", 
+""description"": ""The URL to be used."" 
+}, 
+""limit"": 
+{ ""type"": ""integer"", 
+""description"": ""An optional limit parameter, 
+defaulting to 7."", ""default"": 7 }
+ }, ""required"": [""url""],
+ ""additionalProperties"": False }",16$,https://www.firecrawl.dev/app/api-keys,Text,,POST,No
+MAP_URL_,Get all the links on the page,https://self.com/tools/map,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""url"": {
+            ""type"": ""string"",
+            ""description"": ""The URL to be used.""
+        }
+    },
+    ""required"": [""url""],
+    ""additionalProperties"": False
+}
+",16$,https://www.firecrawl.dev/app/api-keys,Text,,POST,No
+UNSTRUCTURE_TO_STRUCTURE_,Convert unstructured data to structured data based on the given schema.,https://self.com/tools/struct_str,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""schema"": {
+            ""type"": ""string"",
+            ""description"": ""The schema identifier to be used.""
+        },
+        ""data"": {
+            ""type"": ""string"",
+            ""description"": ""The string data value.""
+        }
+    },
+    ""required"": [""schema"", ""data""],
+    ""additionalProperties"": False
+}
+",0,None,Text,,POST,No
+UNSTRUCTURE_TO_STRUCTURE_ARRAY_,Convert unstructured data to structured data based on the given schema.,https://self.com/tools/struct_array,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""schema"": {
+            ""type"": ""string"",
+            ""description"": ""The schema identifier to be used.""
+        },
+        ""data"": {
+            ""type"": ""array"",
+            ""items"": {
+                ""type"": ""string""
+            },
+            ""description"": ""A list of string data values.""
+        }
+    },
+    ""required"": [""schema"", ""data""],
+    ""additionalProperties"": False
+}
+",0,None,Text,,POST,No
+READ_FILE_,Reads any file you provide. Returns content as a string,https://self.com/tools/read,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""file_name"": {
+            ""type"": ""string"",
+            ""format"": ""binary"",
+            ""description"": ""Takes the content of any file you provide""
+        }
+    },
+    ""required"": [""file_name""],
+    ""additionalProperties"": False
+}
+",0,None,Text,,POST,No
+IMAGE_TO_IMAGE_,Stable Diffusion V3 APIs Image2Image API generates an image from an image. Pass the appropriate request parameters to the endpoint to generate image from an image.,https://stablediffusionapi.com/api/v3/img2img,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""prompt"": {
+            ""type"": ""string"",
+            ""description"": ""The prompt for the image generation.""
+        },
+        ""negative_prompt"": {
+            ""type"": ""string"",
+            ""description"": ""The negative prompt to guide the image generation away from certain concepts.""
+        },
+        ""init_image"": {
+            ""type"": ""string"",
+            ""description"": ""The path to the initial image to be used.""
+        },
+        ""width"": {
+            ""type"": ""integer"",
+            ""description"": ""Up to 1024.""
+        },
+        ""height"": {
+            ""type"": ""integer"",
+            ""description"": ""Up to 1024""
+        },
+        ""samples"": {
+            ""type"": ""integer"",
+            ""description"": ""Use any number from 1 to 4.""
+        }
+    },
+    ""required"": [""key"", ""prompt"", ""negative_prompt"", ""init_image"", ""width"", ""height"", ""samples""],
+    ""additionalProperties"": False
+}
+",27$ Monthly,https://modelslab.com/dashboard/apikeys,Image,,POST,Json
+NEWS_SEARCH_,"Search through millions of articles from over 150,000 large and small news sources and blogs.",https://newsapi.org/v2/everything,"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""q"": {
+      ""type"": ""string"",
+      ""description"": ""The query string.""
+    }
+  },
+  ""required"": [""q""],
+  ""additionalProperties"": False
+}
+",0,https://newsapi.org/account,Text,,GET,Json
+NEWS_TOP_HEADLINES_,"This endpoint provides live top and breaking headlines for a country, specific category in a country, single source, or multiple sources.",https://newsapi.org/v2/top-headlines,"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""country"": {
+      ""type"": ""string"",
+      ""description"": ""The 2-letter ISO 3166-1 code of the country you want to get headlines for. Possible options: us.""
+    },
+    ""category"": {
+      ""type"": ""string"",
+      ""description"": ""The category you want to get headlines for. Possible options: business, entertainment, general, health, science, sports, technology.""
+    },
+    ""sources"": {
+      ""type"": ""string"",
+      ""description"": ""A comma-separated string of identifiers for the news sources or blogs you want headlines from.""
+    }
+  },
+ ""required"": [],
+  ""additionalProperties"": False
+}
+",0,https://newsapi.org/account,Text,,GET,Json
+NEWS_SOURSES,This endpoint returns the subset of news publishers that top headlines (/v2/top-headlines) are available from.,https://newsapi.org/v2/top-headlines/sources,"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""category"": {
+      ""type"": ""string"",
+      ""description"": ""Find sources that display news of this category. Possible options: business, entertainment, general, health, science, sports, technology. Default: all categories.""
+    },
+    ""language"": {
+      ""type"": ""string"",
+      ""description"": ""Find sources that display news in a specific language.""
+    },
+    ""country"": {
+      ""type"": ""string"",
+      ""description"": ""Find sources that display news in a specific country.""
+    }
+  },
+ ""required"": [],
+  ""additionalProperties"": False
+}
+",0,https://newsapi.org/account,Text,,GET,Json
+CODE_INTERPRETER_,This function executes the code interpreter and returns the results.,https://self.com/tools/code,"{
+            ""type"": ""object"",
+            ""properties"": {
+                ""code"": {
+                    ""type"": ""string"",
+                    ""description"": ""The python code to execute in a single cell.""
+                }
+            },
+            ""required"": [""code""]
+        }",0,https://e2b.dev/dashboard,Text,,POST,No
+LOAD_FILE_CODE_INTERPRETER_,This function uploads a file to the code interpreter and returns the path.,https://self.com/tools/file_code,"{
+            ""type"": ""object"",
+            ""properties"": {
+                ""file_url"": {
+                    ""type"": ""string"",
+                    ""description"": ""Url of the file you want to use in your code""
+                }
+            },
+            ""required"": [""code""]
+        }",0,https://e2b.dev/dashboard,Text,,POST,No
+RAG_,RAG function that processes and indexes documents for efficient retrieval in NLP tasks.,https://self.com/tools/rag,"{
+    ""type"": ""object"",
+    ""properties"": {
+      ""docs"": {
+        ""type"": ""array"",
+        ""items"": {
+          ""type"": ""string""
+        },
+        ""description"": ""A list of documents to retrieve relevant information from.""
+      }
+    },
+    ""required"": [""docs""]
+  }",0,None,Text,,POST,No
+LUMA_TEXT_TO_VIDEO_,Generate a video out of the text you provide,https://api.lumalabs.ai/dream-machine/v1/generations,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""prompt"": {
+            ""type"": ""string"",
+            ""description"": ""Text to turn into a video""
+        }
+    },
+    ""required"": [""prompt""],
+    ""additionalProperties"": False
+}",That is $0.0032 per frame or about $0.35 for 5s 24fps video at 1280×720p,https://lumalabs.ai/dream-machine/api/keys,Video,,POST,Bearer
+LUMA_IMAGE_TO_VIDEO_,You give a prompt and an Image and model generats video out of it,https://api.lumalabs.ai/dream-machine/v1/generations,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""prompt"": {
+            ""type"": ""string"",
+            ""description"": ""The prompt describing the scene.""
+        },
+        ""keyframes"": {
+            ""type"": ""object"",
+            ""properties"": {
+                ""frame0"": {
+                    ""type"": ""object"",
+                    ""properties"": {
+                        ""type"": {
+                            ""type"": ""string"",
+                            ""description"": ""The type of media, such as 'image'.""
+                        },
+                        ""url"": {
+                            ""type"": ""string"",
+                            ""format"": ""uri"",
+                            ""description"": ""The URL of the image for the keyframe.""
+                        }
+                    },
+                    ""required"": [""type"", ""url""],
+                    ""additionalProperties"": false
+                }
+            },
+            ""required"": [""frame0""],
+            ""additionalProperties"": false
+        }
+    },
+    ""required"": [""prompt"", ""keyframes""],
+    ""additionalProperties"": false
+}
+",That is $0.0032 per frame or about $0.35 for 5s 24fps video at 1280×720p,https://lumalabs.ai/dream-machine/api/keys,Video,,POST,Bearer
