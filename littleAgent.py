@@ -53,7 +53,8 @@ def run(todo: str, tools: dict, openai_api_key: str, composio_toolset: ComposioT
                     tool['file'] = None
 
         for tool in tools['mine']:
-            tool_result.append(useTool(tool, todo, openai_api_key, api_keys[tool]))
+            api_key = api_keys.get(tool, None)
+            tool_result.append(useTool(tool, todo, openai_api_key, api_key))
 
         print(tool_result)
 
@@ -65,11 +66,9 @@ def run(todo: str, tools: dict, openai_api_key: str, composio_toolset: ComposioT
             ],
         )
 
-        # Extract the model's answer
         answer = response.choices[0].message.content
         print(answer)
 
-        # Return the answer
         return 200, answer
     except Exception as e:
         return 400, f'error: {e}'

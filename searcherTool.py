@@ -41,7 +41,7 @@ def tool_searcher(query: str):
 
     retriever = WeaviateHybridSearchRetriever(
         client=client,
-        index_name="TOOLSET3",
+        index_name="TOOLSET4",
         text_key="text",
         attributes=[],
         create_schema_if_missing=True,

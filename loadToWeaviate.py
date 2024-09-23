@@ -13,7 +13,8 @@ import os
 composio_tools = pd.read_csv('../tools/tools.csv')['tool'].to_numpy()
 # my_tools = pd.read_csv('./tools_mine.csv')['Name'].to_numpy()
 
-all_tools = [Document(page_content=tool) for tool in composio_tools] + [Document(page_content=tool) for tool in my_tools]
+all_tools = [Document(page_content=tool) for tool in composio_tools]
+    #   + [Document(page_content=tool) for tool in my_tools]
 
 
 
@@ -34,7 +35,7 @@ client = weaviate.Client(
 
 retriever = WeaviateHybridSearchRetriever(
     client=client,
-    index_name="TOOLSET3",
+    index_name="TOOLSET4",
     text_key="text",
     attributes=[],
     create_schema_if_missing=True,
