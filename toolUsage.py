@@ -154,7 +154,6 @@ def useTool(tool_name:str, query:str, openai_api_key:str, tool_api_key:Optional[
 
 
 
-    # Send the result to the LLM
     if result:
         messages.append({
             "role": "function",
