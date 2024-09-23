@@ -98,7 +98,7 @@ def useTool(tool_name:str, query:str, openai_api_key:str, tool_api_key:Optional[
         return 100
 
     if 'self.com' in tool['API']:
-        tool['API'] = tool['API'].replace('https://self.com', 'http://localhost:8000')
+        tool['API'] = tool['API'].replace('https://self.com', 'https://common-whippet-nursik-68595641.koyeb.app')
 
 
     print(tool)

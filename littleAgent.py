@@ -53,7 +53,7 @@ def run(todo: str, tools: dict, openai_api_key: str, composio_toolset: ComposioT
                     tool['file'] = None
 
         for tool in tools['mine']:
-            tool_result.ap pend(useTool(tool, todo, openai_api_key, api_keys[tool]))
+            tool_result.append(useTool(tool, todo, openai_api_key, api_keys[tool]))
 
         print(tool_result)
 
