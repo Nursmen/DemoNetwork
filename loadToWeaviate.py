@@ -35,7 +35,7 @@ client = weaviate.Client(
 
 retriever = WeaviateHybridSearchRetriever(
     client=client,
-    index_name="TOOLSET4",
+    index_name="TOOLSET5",
     text_key="text",
     attributes=[],
     create_schema_if_missing=True,

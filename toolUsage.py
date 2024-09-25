@@ -24,6 +24,7 @@ def request_tool(tool, tool_api_key, arguments, file_path):
 
             if need_api_key == 'search':
                 arguments['access_key'] = tool_api_key
+                arguments['apiKey'] = tool_api_key
                 api_response = requests.get(api_endpoint, params=arguments)
             else:
                 api_response = requests.get(api_endpoint, params=arguments)
@@ -153,29 +154,33 @@ def useTool(tool_name:str, query:str, openai_api_key:str, tool_api_key:Optional[
         return 400
 
 
-
     if result:
-        messages.append({
-            "role": "function",
-            "name": tool_call.function.name,
-            "content": json.dumps(result)
-        })
+        return result
     else:
-        messages.append({
-            "role": "function",
-            "name": tool_call.function.name,
-            "content": "Sorry, I couldn't retrieve the information you requested."
-        })
+        return "Sorry, I couldn't retrieve the information you requested."
 
-    response = client.chat.completions.create(
-        model='gpt-3.5-turbo',
-        messages=messages
-    )
+    # if result:
+    #     messages.append({
+    #         "role": "function",
+    #         "name": tool_call.function.name,
+    #         "content": json.dumps(result)
+    #     })
+    # else:
+    #     messages.append({
+    #         "role": "function",
+    #         "name": tool_call.function.name,
+    #         "content": "Sorry, I couldn't retrieve the information you requested."
+    #     })
 
-    print("Assistant's response:")
-    print(response.choices[0].message.content)
+    # response = client.chat.completions.create(
+    #     model='gpt-3.5-turbo',
+    #     messages=messages
+    # )
 
-    return response.choices[0].message.content
+    # print("Assistant's response:")
+    # print(response.choices[0].message.content)
+
+    # return response.choices[0].message.content
  
 
 if __name__ == "__main__":

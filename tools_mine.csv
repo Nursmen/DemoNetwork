@@ -266,12 +266,15 @@ NEWS_SEARCH_,"Search through millions of articles from over 150,000 large and sm
     ""q"": {
       ""type"": ""string"",
       ""description"": ""The query string.""
-    }
-  },
-  ""required"": [""q""],
+    },
+    ""pageSize"": {
+    ""type"":""integer"",
+    ""desctiption"": ""How many results do you want?""
+  },},
+  ""required"": [""q"", ""pageSize""],
   ""additionalProperties"": False
 }
-",0,https://newsapi.org/account,Text,,GET,Json
+",0,https://newsapi.org/account,Text,,GET,Search
 NEWS_TOP_HEADLINES_,"This endpoint provides live top and breaking headlines for a country, specific category in a country, single source, or multiple sources.",https://newsapi.org/v2/top-headlines,"{
   ""type"": ""object"",
   ""properties"": {
@@ -291,7 +294,7 @@ NEWS_TOP_HEADLINES_,"This endpoint provides live top and breaking headlines for 
  ""required"": [],
   ""additionalProperties"": False
 }
-",0,https://newsapi.org/account,Text,,GET,Json
+",0,https://newsapi.org/account,Text,,GET,Search
 NEWS_SOURSES,This endpoint returns the subset of news publishers that top headlines (/v2/top-headlines) are available from.,https://newsapi.org/v2/top-headlines/sources,"{
   ""type"": ""object"",
   ""properties"": {
@@ -311,7 +314,7 @@ NEWS_SOURSES,This endpoint returns the subset of news publishers that top headli
  ""required"": [],
   ""additionalProperties"": False
 }
-",0,https://newsapi.org/account,Text,,GET,Json
+",0,https://newsapi.org/account,Text,,GET,Search
 CODE_INTERPRETER_,This function executes the code interpreter and returns the results.,https://self.com/tools/code,"{
             ""type"": ""object"",
             ""properties"": {
@@ -391,3 +394,14 @@ LUMA_IMAGE_TO_VIDEO_,You give a prompt and an Image and model generats video out
     ""additionalProperties"": false
 }
 ",That is $0.0032 per frame or about $0.35 for 5s 24fps video at 1280×720p,https://lumalabs.ai/dream-machine/api/keys,Video,,POST,Bearer
+WEB_SEARCH_,Uses tavily search to search for whatever you want,https://api.tavily.com/search,"{
+    ""type"": ""object"",
+    ""properties"": {
+        ""query"": {
+            ""type"": ""string"",
+            ""description"": ""The query string to search.""
+        },
+    },
+    ""required"": [""query""],
+    ""additionalProperties"": False
+}",0 untill 1000 requests,https://app.tavily.com/home,Text,,POST,Json
