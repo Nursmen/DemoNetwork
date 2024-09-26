@@ -10,7 +10,7 @@ from composio.client.collections import (
 from composio.client.exceptions import ComposioClientError
 from composio.utils.url import get_web_url
 from composio.cli.context import get_context
-from composio.cli.connections import _connections
+
 
 def _load_integration(
     context: Context,
@@ -134,17 +134,6 @@ def _handle_oauth(
         use_composio_auth=True,
         force_new_integration=len(scopes or []) > 0,
     )
-    # if not no_browser:
-    #     webbrowser.open(
-    #         url=str(connection.redirectUrl),
-    #     )
-    # click.echo(
-    #     f"Please authenticate {app_name} in the browser and come back here. "
-    #     f"URL: {connection.redirectUrl}"
-    # )
-    # click.echo(f"⚠ Waiting for {app_name} authentication...")
-    # connection.wait_until_active(client=client)
-    # click.echo(f"✔ {app_name} added successfully!")
 
     return connection.redirectUrl
 
@@ -206,11 +195,9 @@ def _handle_basic_auth(
     return "Basic auth added successfully!"
 
 def check_integration(name:str) -> bool:
-    context = get_context()
-
-    integrations = context.client.integrations.get()
-
-    return any(integration.appName == name for integration in integrations)
+    
+    context = _load_integration(name)
+    return context is not None
 
 if __name__ == "__main__":
     print(check_integration('weathermap'))

@@ -1,4 +1,3 @@
-from langchain.agents import tool
 from langchain_openai import ChatOpenAI
 
 import weaviate
@@ -23,7 +22,7 @@ APIKEY = 'UqAdx7BDphab5z4o1fh9OqeIpVsSunqtxUSX'
 # COHERE_API_KEY = os.getenv('COHERE_API_KEY')
 COHERE_API_KEY = '5EpCLYfOleHpMpjOuHjlQtylxlUstRWJnE2o8AJH'
 
-@tool
+
 def tool_searcher(query: str):
     """
     Scan a predefined tools database and retrieve the most appropriate tool required for a given task. When a command is provided, the searcher automatically looks up the tools available in the connected apps to ensure the necessary tool exists.
@@ -34,9 +33,7 @@ def tool_searcher(query: str):
     client = weaviate.Client(
         url=URL,
         auth_client_secret=weaviate.AuthApiKey(api_key=APIKEY),
-        additional_headers={
-            "X-Openai-Api-Key": OPENAI_API_KEY,
-        },
+        additional_headers={"X-Openai-Api-Key": OPENAI_API_KEY},
     )
 
     retriever = WeaviateHybridSearchRetriever(
@@ -49,28 +46,38 @@ def tool_searcher(query: str):
     )
 
     co = cohere.Client(api_key=COHERE_API_KEY)
-
     model = ChatOpenAI(model="gpt-4o", openai_api_key=OPENAI_API_KEY)
 
-    prompt = """Which one of the following tools is more likly to be used for a given task? Return it in the same format as the tool-set\n\n"""
+    prompt = "Which of the following tools is most likely to be used for the given task? Return it in the same format as the tool-set\n\n"
     
-    firstFilter = [ff.page_content for ff in retriever.invoke(query)]
+    # First filter: Retrieve relevant tools
+    first_filter = retriever.invoke(query)
 
-    results = co.rerank(model="rerank-english-v3.0", query=query, documents=firstFilter, top_n=20, return_documents=True)
+    # Rerank results
+    reranked_results = co.rerank(
+        model="rerank-english-v3.0",
+        query=query,
+        documents=[ff.page_content for ff in first_filter],
+        top_n=20,
+        return_documents=True
+    )
 
-    s = ", ".join([o.document.text for o in results.results])
+    # Prepare input for the model
+    tool_descriptions = ", ".join(o.document.text for o in reranked_results.results)
+    
+    # Get model's recommendation
+    model_response = model.invoke(prompt + tool_descriptions + "\n\n" + query)
 
-    results = model.invoke(prompt + s + "\n\n" + query)
-
+    # Extract tool name
     try:
-
-        tools_needed = re.findall(r'\b[A-Z_]+\b', results.content)[-1]
-    except:
+        tools_needed = re.findall(r'\b[A-Z_]+\b', model_response.content)[-1]
+    except IndexError:
         return None
     
-    results = [ff.page_content for ff in retriever.invoke(tools_needed)]
-
-    return results[0]
+    # Final retrieval
+    final_results = retriever.invoke(tools_needed)
+    
+    return final_results[0].page_content if final_results else None
 
 if __name__ == "__main__":
     for i in range(1):
