@@ -1,28 +1,19 @@
 from langchain_openai import ChatOpenAI
-
+from langchain_core.tools import tool
 import weaviate
 from langchain_community.retrievers import (
     WeaviateHybridSearchRetriever,
 )
-
 import cohere
-
 import os
-# import dotenv
-
 import re
 
-# dotenv.load_dotenv()
 
-# URL = os.getenv('WEAVIATE_URL')
 URL = 'https://xq2djbbhscm62fg72eqsg.c0.us-east1.gcp.weaviate.cloud'
-# APIKEY = os.getenv('WEAVIATE_API_KEY')
 APIKEY = 'UqAdx7BDphab5z4o1fh9OqeIpVsSunqtxUSX'
-# OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-# COHERE_API_KEY = os.getenv('COHERE_API_KEY')
 COHERE_API_KEY = '5EpCLYfOleHpMpjOuHjlQtylxlUstRWJnE2o8AJH'
 
-
+@tool
 def tool_searcher(query: str):
     """
     Scan a predefined tools database and retrieve the most appropriate tool required for a given task. When a command is provided, the searcher automatically looks up the tools available in the connected apps to ensure the necessary tool exists.

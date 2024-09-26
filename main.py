@@ -155,7 +155,7 @@ for idx, msg in enumerate(msgs.messages):
 
 if 'first' not in st.session_state and openai_api_key:
     with st.chat_message("user"):
-        st.write("You are a usefull planner that devide a problem into smaller parts. Understood?")
+        st.write("You are a usefull planner that can devide a problem into smaller parts. Understood?")
 
 
 # Some initializations
